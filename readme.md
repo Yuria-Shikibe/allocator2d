@@ -1,6 +1,6 @@
 # Allocator 2D
 
-* Provide simple **dynamic** rectangle area allocation/deallocation.
+* Provide simple **dynamic** rectangle area allocation/deallocation, written in **C++20**.
 * Support Memory Allocator for internal containers.
 * Not thread safe.
 * Never rotate the area.
