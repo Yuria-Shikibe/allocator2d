@@ -5,7 +5,7 @@
 * Not thread safe.
 * Never rotate the area.
 * No _strong exception guarantee_ .(regularly it should only throw `std::bad_alloc`) 
-* The code is in di `./mo_yanxi`.
+* The code is in dir `./mo_yanxi`.
 
 ### Code Sample:
 ```c++
