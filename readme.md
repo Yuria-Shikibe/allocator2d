@@ -53,8 +53,9 @@ Standard Test
 
 ## Strategy (Quad Split)
 * Try fit into small blocks. 
-* Try to use area with thin siding, even if there exist area that has area smaller than it.
+* Try to use area with thin siding, even if there exist region that has area smaller than it.
 * Split the area to four part if there are remained area. ~~To be honest I think split to two parts may be better, but just remain it here...~~
+* Region after deallocate but has leaves cannot be merged is usable, but cannot be split again, which can cause low space efficiency(see Standard Test S3: some small white fragments take a large region)
 
 #### If you want to save space, try allocating large components first.
 
