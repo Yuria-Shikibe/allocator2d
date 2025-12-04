@@ -28,41 +28,42 @@ void foo(){
 3. Allocate small fragments(color in white)
 4. Deallocate all (not displayed, no leak anyway)
 * You can play with the test with code in main.cpp
-
-#### HighFragment Test
-<div style="display: flex; justify-content: space-around; align-items: normal;">
-    <div style="text-align: center;">
-        <img src="readme_assets/HighFragment_01_allocated.png" width="100%"  alt=""/>
-        <p>Initial Allocate</p>
-    </div>
-    <div style="text-align: center;">
-        <img src="readme_assets/HighFragment_02_fragmented.png" width="100%"  alt=""/>
-        <p>Partial Deallocate</p>
-    </div>
-    <div style="text-align: center;">
-        <img src="readme_assets/HighFragment_03_refilled.png" width="100%"  alt=""/>
-        <p>Allocate Fragments(White)</p>
-    </div>
-</div>
-
----
-
-#### Standard Test
-<div style="display: flex; justify-content: space-around; align-items: normal;">
-    <div style="text-align: center;">
-        <img src="readme_assets/Standard_01_allocated.png" width="100%"  alt=""/>
-        <p>Initial Allocate</p>
-    </div>
-    <div style="text-align: center;">
-        <img src="readme_assets/Standard_02_fragmented.png" width="100%"  alt=""/>
-        <p>Partial Deallocate</p>
-    </div>
-    <div style="text-align: center;">
-        <img src="readme_assets/Standard_03_refilled.png" width="100%"  alt=""/>
-        <p>Allocate Fragments(White)</p>
-    </div>
-</div>
-
+<table>
+    <thead>
+        <tr>
+            <th align="center">Test Case</th>
+            <th align="center">Initial Allocate</th>
+            <th align="center">Partial Deallocate</th>
+            <th align="center">Allocate Fragments (White)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="center"><strong>HighFragment</strong></td>
+            <td align="center">
+                <img src="readme_assets/HighFragment_01_allocated.png" width="100%" alt="HighFragment Initial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/HighFragment_02_fragmented.png" width="100%" alt="HighFragment Partial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/HighFragment_03_refilled.png" width="100%" alt="HighFragment Refilled"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="center"><strong>Standard</strong></td>
+            <td align="center">
+                <img src="readme_assets/Standard_01_allocated.png" width="100%" alt="Standard Initial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/Standard_02_fragmented.png" width="100%" alt="Standard Partial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/Standard_03_refilled.png" width="100%" alt="Standard Refilled"/>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 
 
