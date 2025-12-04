@@ -72,7 +72,7 @@ void foo(){
 
 ---
 
-* Using Clang 20.1, -O2
+* Using Clang 20.1, -O2, `std::allocator`
 
 <table>
     <thead>
