@@ -24,12 +24,13 @@ void foo(){
 }
 ```
 
-## Overview
+## Benchmark
 1. Try to allocate many rects on a clean area.
 2. Deallocate some of them
 3. Allocate small fragments(color in white)
 4. Deallocate all (not displayed, no leak anyway)
 * You can play with the test with code in main.cpp
+
 <table>
     <thead>
         <tr>
@@ -40,6 +41,18 @@ void foo(){
         </tr>
     </thead>
     <tbody>
+<tr>
+            <td align="center"><strong>Standard</strong></td>
+            <td align="center">
+                <img src="readme_assets/Standard_01_allocated.png" width="100%" alt="Standard Initial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/Standard_02_fragmented.png" width="100%" alt="Standard Partial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/Standard_03_refilled.png" width="100%" alt="Standard Refilled"/>
+            </td>
+        </tr>
         <tr>
             <td align="center"><strong>HighFragment</strong></td>
             <td align="center">
@@ -52,19 +65,9 @@ void foo(){
                 <img src="readme_assets/HighFragment_03_refilled.png" width="100%" alt="HighFragment Refilled"/>
             </td>
         </tr>
-        <tr>
-            <td align="center"><strong>Standard</strong></td>
-            <td align="center">
-                <img src="readme_assets/Standard_01_allocated.png" width="100%" alt="Standard Initial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/Standard_02_fragmented.png" width="100%" alt="Standard Partial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/Standard_03_refilled.png" width="100%" alt="Standard Refilled"/>
-            </td>
-        </tr>
+
     </tbody>
+
 </table>
 
 <table>
