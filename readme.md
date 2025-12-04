@@ -5,7 +5,8 @@ This library is designed for image atlas with **deallocation** demands(space reu
 * Single header/module interface.
 * Support Memory Allocator for internal containers.
 * Not thread safe.
-* Never rotate the area.
+* Never rotate the region.
+* Never move the region after allocating.
 * No _strong exception guarantee_ .(regularly it should only throw `std::bad_alloc`) 
 * The code is in dir `./include/mo_yanxi`.
 
