@@ -150,11 +150,9 @@ namespace mo_yanxi{
 				std::pair<const size_type, inner_tree_type>>>
 		>;
 
-		// Large pool: store area >= 1/8 (Comment says 1/8 but init says 1/64, logic follows code)
 		tree_type large_nodes_xy_{};
 		tree_type large_nodes_yx_{};
 
-		// Fragment pool: store area < 1/8
 		tree_type frag_nodes_xy_{};
 		tree_type frag_nodes_yx_{};
 
