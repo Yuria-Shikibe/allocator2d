@@ -446,9 +446,8 @@ namespace mo_yanxi{
 
 			for (auto cur = begin; cur != end; ++cur) {
 				if (cur->second == src) {
-					auto is_last = std::ranges::next(begin) == end;
 					inner.erase(cur);
-					if(is_last){
+					if(itr->second.empty()){
 						map.erase(itr);
 					}
 					return;

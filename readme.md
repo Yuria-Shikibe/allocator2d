@@ -24,7 +24,7 @@ void foo(){
 }
 ```
 
-## Benchmark
+## Benchmark 
 1. Try to allocate many rects on a clean area.
 2. Deallocate some of them
 3. Allocate small fragments(color in white)
@@ -65,6 +65,18 @@ void foo(){
                 <img src="readme_assets/HighFragment_03_refilled.png" width="100%" alt="HighFragment Refilled"/>
             </td>
         </tr>
+        <tr>
+            <td align="center"><strong>Aligned</strong></td>
+            <td align="center">
+                <img src="readme_assets/Aligned_01_allocated.png" width="100%" alt="Aligned Initial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/HighFragment_02_fragmented.png" width="100%" alt="Aligned Partial"/>
+            </td>
+            <td align="center">
+                <img src="readme_assets/HighFragment_03_refilled.png" width="100%" alt="Aligned Refilled"/>
+            </td>
+        </tr>
     </tbody>
 </table>
 
@@ -72,153 +84,23 @@ void foo(){
 
 * Using Clang 20.1, -O2, `std::allocator`
 
-<table>
-    <thead>
-        <tr>
-            <th>Test Type</th>
-            <th>Phase</th>
-            <th>Metric</th>
-            <th>ns/op</th>
-            <th>Operation Count</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td rowspan="12"><strong>Standard</strong><br>(2048x2048)</td>
-            <td rowspan="3">Phase 1: Alloc Fill</td>
-            <td>Total</td>
-            <td>137.48</td>
-            <td>10,000</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>1463.64</td>
-            <td>55</td>
-        </tr>
-        <tr>
-            <td>Fail</td>
-            <td>130.15</td>
-            <td>9,945</td>
-        </tr>
-        <tr>
-            <td rowspan="2">Phase 2: Dealloc Fragment</td>
-            <td>Total</td>
-            <td>970.37</td>
-            <td>27</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>970.37</td>
-            <td>27</td>
-        </tr>
-        <tr>
-            <td rowspan="3">Phase 3: Alloc Refill</td>
-            <td>Total</td>
-            <td>278.90</td>
-            <td>5,000</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>1414.14</td>
-            <td>389</td>
-        </tr>
-        <tr>
-            <td>Fail</td>
-            <td>183.13</td>
-            <td>4,611</td>
-        </tr>
-        <tr>
-            <td rowspan="2">Phase 4: Dealloc Partial</td>
-            <td>Total</td>
-            <td>584.80</td>
-            <td>125</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>584.80</td>
-            <td>125</td>
-        </tr>
-        <tr>
-            <td rowspan="2">Phase 5: Dealloc Final</td>
-            <td>Total</td>
-            <td>1076.03</td>
-            <td>292</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>1076.03</td>
-            <td>292</td>
-        </tr>
-        <tr>
-            <td rowspan="12"><strong>HighFragment</strong><br>(1024x1024)</td>
-            <td rowspan="3">Phase 1: Alloc Fill</td>
-            <td>Total</td>
-            <td>1226.78</td>
-            <td>10,000</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>2062.73</td>
-            <td>5,723</td>
-        </tr>
-        <tr>
-            <td>Fail</td>
-            <td>108.21</td>
-            <td>4,277</td>
-        </tr>
-        <tr>
-            <td rowspan="2">Phase 2: Dealloc Fragment</td>
-            <td>Total</td>
-            <td>543.45</td>
-            <td>2,861</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>543.45</td>
-            <td>2,861</td>
-        </tr>
-        <tr>
-            <td rowspan="3">Phase 3: Alloc Refill</td>
-            <td>Total</td>
-            <td>765.26</td>
-            <td>5,000</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>2381.43</td>
-            <td>1,438</td>
-        </tr>
-        <tr>
-            <td>Fail</td>
-            <td>112.80</td>
-            <td>3,562</td>
-        </tr>
-        <tr>
-            <td rowspan="2">Phase 4: Dealloc Partial</td>
-            <td>Total</td>
-            <td>512.33</td>
-            <td>1,290</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>512.33</td>
-            <td>1,290</td>
-        </tr>
-        <tr>
-            <td rowspan="2">Phase 5: Dealloc Final</td>
-            <td>Total</td>
-            <td>1326.81</td>
-            <td>3,010</td>
-        </tr>
-        <tr>
-            <td>Success</td>
-            <td>1326.81</td>
-            <td>3,010</td>
-        </tr>
-    </tbody>
-</table>
-
-
+| Test Suite       | Phase            | Total (ns/op) | Success (ns/op) | Fail (ns/op) |
+|:-----------------|:-----------------|:--------------|:----------------|:-------------|
+| **Standard**     | Alloc Fill       | 1706.15       | 2502.52         | 1683.38      |
+|                  | Dealloc Fragment | 1452.52       | 1452.52         | -            |
+|                  | Alloc Refill     | 2939.96       | 1697.63         | 5073.53      |
+|                  | Dealloc Partial  | 757.63        | 757.63          | -            |
+|                  | Dealloc Final    | 1801.39       | 1801.39         | -            |
+| **HighFragment** | Alloc Fill       | 2682.84       | 2152.11         | 4646.15      |
+|                  | Dealloc Fragment | 683.56        | 683.56          | -            |
+|                  | Alloc Refill     | 2363.76       | 2204.31         | 2707.00      |
+|                  | Dealloc Partial  | 647.03        | 647.03          | -            |
+|                  | Dealloc Final    | 2187.15       | 2187.15         | -            |
+| **Aligned**      | Alloc Fill       | 466.72        | 1105.13         | 23.81        |
+|                  | Dealloc Fragment | 1863.92       | 1863.92         | -            |
+|                  | Alloc Refill     | 932.92        | 1656.76         | 379.24       |
+|                  | Dealloc Partial  | 821.28        | 821.28          | -            |
+|                  | Dealloc Final    | 20674.69      | 20674.69        | -            |
 
 
 ## Strategy (Quad Split)

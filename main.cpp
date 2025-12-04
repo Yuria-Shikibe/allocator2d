@@ -370,6 +370,16 @@ void test_fn(){
         allocator_tester tester(config);
         tester.run();
     }
+    {
+        allocator_tester::config config{
+            .test_name = "Aligned",
+            .map_size = 1024,
+            .max_fill_attempts = 10000,
+            .size_range = {16, 16}
+        };
+        allocator_tester tester(config);
+        tester.run();
+    }
 
 }
 
