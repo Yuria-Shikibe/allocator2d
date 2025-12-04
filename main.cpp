@@ -70,7 +70,7 @@ public:
 
 private:
     config config_;
-    mo_yanxi::allocator2d<> alloc_;
+    mo_yanxi::allocator2d_checked<> alloc_;
     canvas canvas_;
     std::vector<block_info> active_blocks_;
     std::mt19937 rng_;
@@ -232,6 +232,9 @@ private:
     void phase_5_full_clear_and_verify() {
         std::println("[Phase 5] Performing full clear and final verification...");
 
+        auto t = std::move(alloc_);
+        alloc_ = std::move(t);
+
         for(const auto& b : active_blocks_) {
             if(!alloc_.deallocate(b.pos)) {
                  std::println(stderr, "  -> Fatal Error: Failed to release block at {},{}", b.pos.x, b.pos.y);
@@ -254,6 +257,8 @@ private:
             if (huge_block) {
                 std::println("  -> [PASS] Perfect merge verification: Successfully allocated full map block.");
                 canvas_.draw_rect(0, 0, config_.map_size, config_.map_size, 0, 255, 0); // Green
+                alloc_.deallocate({});
+
             } else {
                 std::println("  -> [FAIL] Perfect merge verification: Cannot allocate full map block (fragmentation merge issue).");
                 canvas_.draw_rect(0, 0, config_.map_size, config_.map_size, 255, 0, 0); // Red
@@ -263,7 +268,6 @@ private:
         }
 
         canvas_.save(get_filename("05_full_clear.png"));
-
     }
 };
 
