@@ -16,7 +16,7 @@
 #include <chrono> // [Added] Needed for timing
 #endif
 
-#include "include/mo_yanxi/allocator_2d.hpp"
+#include "include/mo_yanxi/allocator2d.hpp"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
