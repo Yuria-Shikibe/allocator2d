@@ -1,5 +1,5 @@
 # Allocator 2D
-This library is designed for image atlas with **deallocation** demands(space reuse like temporary icons, glyphs...) and  image fragments varying in **two** dimension.
+This library is designed for image atlas with **deallocation** demands (space reuse like temporary icons, glyphs...) and image fragments varying in **two** dimensions.
 
 * Provide simple **dynamic** rectangle area allocation/deallocation, written in **C++20**.
 * Single header/module interface.
@@ -7,7 +7,7 @@ This library is designed for image atlas with **deallocation** demands(space reu
 * Not thread safe.
 * Never rotate the region.
 * Never move the region after allocating.
-* No _strong exception guarantee_ .(regularly it should only throw `std::bad_alloc`) 
+* No _strong exception guarantee_ (regularly it should only throw `std::bad_alloc`).
 * The code is in dir `./include/mo_yanxi`.
 
 ### Code Sample:
@@ -24,10 +24,60 @@ void foo(){
 }
 ```
 
+## Strategy (Quad Split)
+
+The allocator employs a quad-split strategy to manage 2D rectangular space effectively.
+
+1.  **Search**: It looks for a free node (rectangle) that fits the requested dimensions. Prioritizes best-fit on one axis.
+2.  **Allocation**: The requested area is placed at the **bottom-left** corner of the chosen node.
+3.  **Split**: The remaining L-shaped area is split into up to three new free rectangles (siblings).
+
+<table border="0" cellspacing="0" cellpadding="5" style="border-collapse:collapse; text-align:center;">
+  <tr>
+    <td style="border: 2px dashed #888; width:150px; height:100px;">
+      <strong>Top-Left (Free)</strong><br>
+      <span style="font-size:0.8em; color:#555;">Sibling 3</span>
+    </td>
+    <td style="border: 2px dashed #888; width:250px; height:100px;">
+      <strong>Top-Right (Free)</strong><br>
+      <span style="font-size:0.8em; color:#555;">Sibling 2 (Corner)</span>
+    </td>
+  </tr>
+  <tr>
+    <td style="border: 2px solid #333; width:150px; height:150px;">
+      <strong>Allocated</strong><br>
+      <span style="font-size:0.8em;">(User Request)</span>
+    </td>
+    <td style="border: 2px dashed #888; width:250px; height:150px;">
+      <strong>Bottom-Right (Free)</strong><br>
+      <span style="font-size:0.8em; color:#555;">Sibling 1</span>
+    </td>
+  </tr>
+</table>
+
+### Merging & Deallocation
+*   **Strict Merge Rule**: A node can only be merged back into its parent if **all** of its generated siblings are also free (idle).
+*   **Fragmentation Risk**: If a small fragment (e.g., "Sibling 2") is still in use, the other siblings cannot be merged back to the parent. This can prevent large regions from reforming, as seen in the "Standard Test S3" benchmark.
+
+> **Tip:** To save space and minimize fragmentation, try allocating large components first.
+
+## Technical Details
+
+### Coordinate System
+The allocator uses a standard Cartesian coordinate system:
+*   **Origin (0, 0)**: Bottom-Left corner.
+*   **+X**: Right.
+*   **+Y**: Up.
+
+### Fragment Threshold
+To improve performance, the allocator distinguishes between "Large Nodes" and "Fragments".
+*   Nodes smaller than the `fragment_threshold` (default: ~1.5% of total area) are stored in separate search trees.
+*   This prevents small gaps from polluting the main search space, ensuring faster lookup times for significant allocations.
+
 ## Benchmark 
 1. Try to allocate many rects on a clean area.
 2. Deallocate some of them
-3. Allocate small fragments(color in white)
+3. Allocate small fragments (color in white)
 4. Deallocate all (not displayed, no leak anyway)
 * You can play with the test with code in main.cpp
 
@@ -102,39 +152,25 @@ void foo(){
 |                  | Dealloc Partial  | 821.28        | 821.28          | -            |
 |                  | Dealloc Final    | 20674.69      | 20674.69        | -            |
 
-
-## Strategy (Quad Split)
-* Try fit into small blocks. 
-* Try to use area with thin siding, even if there exist region that has area smaller than it.
-* Split the area to four part if there are remained area. ~~To be honest I think split to two parts may be better, but just remain it here...~~
-* Region after deallocate but has leaves cannot be merged is usable, but cannot be split again, which can cause low space efficiency(see Standard Test S3: some small white fragments take a large region)
-
-#### If you want to save space, try allocating large components first.
-
 ## Interface
 
 ### Allocate
-* Input the extent you need, return an point to the bottom left(x to right and y to above) of the allocated region. Or `nullopt` if there cannot find such space. 
+* Input the extent you need, return an point to the bottom left (x to right and y to above) of the allocated region. Or `nullopt` if there cannot find such space.
 * The allocated area is never moved.
 
 ### Deallocate
 * Input the position obtained from `allocate`. 
-* Return false if the point is not a root of an allocated area in this allocator. Generally this is an error similar to _double free_ or `delete` a pointer that is not obtained from `operator new`, i.e. it should be treated as an assertion error.
+* Return `false` if the point is not a root of an allocated area in this allocator. Generally this is an error similar to _double free_ or `delete` a pointer that is not obtained from `operator new`, i.e. it should be treated as an assertion error.
 
 ### Copy Constructor/Assign Operator
 * The copy constructor is defined as protected, you can derive the allocator and expose it to using this functionality.
 
-
 ### Move Constructor/Assign Operator
 * Allocator after being moved is empty, you should reassign an allocator to it if you want use it after move.
-
-
 
 ## Leak Check
 * `mo_yanxi::allocator2d_checked` Provides leak check. It checks that if the remain area is not equal to the total extent on destruct. If leaks, it calls `MO_YANXI_ALLOCATOR_2D_LEAK_BEHAVIOR(*this)` or print a simple error message and call `std::terminate` by default.
 
 ## Misc
-* Marco `MO_YANXI_ALLOCATOR_2D_USE_STD_MODULE` specifies whether to use std module.
-* Marco `MO_YANXI_ALLOCATOR_2D_HAS_MATH_VECTOR2` is used by the author with other libs, currently remained here.
-
-
+* Macro `MO_YANXI_ALLOCATOR_2D_USE_STD_MODULE` specifies whether to use std module.
+* Macro `MO_YANXI_ALLOCATOR_2D_HAS_MATH_VECTOR2` is used by the author with other libs, currently kept here.
