@@ -4,7 +4,7 @@ This library is designed for image atlas with **deallocation** demands (space re
 * Provide simple **dynamic** rectangle area allocation/deallocation, written in **C++20**.
 * Single header/module interface.
 * Support Memory Allocator for internal containers.
-* Not thread safe.
+* Not thread safe on the same allocator.
 * Never rotate the region.
 * Never move the region after allocating.
 * No _strong exception guarantee_ (regularly it should only throw `std::bad_alloc`).
