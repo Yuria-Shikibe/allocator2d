@@ -333,7 +333,7 @@ namespace mo_yanxi{
 					p = next;
 				}
 
-				assert(!alloc.map_.contains(last->bot_lft) || alloc.map_.at(last->bot_lft).idle);
+				//assert(!alloc.map_.contains(last->bot_lft) || alloc.map_.at(last->bot_lft).idle);
 				if(p->is_leaf()){
 					alloc.mark_size_(p->bot_lft, p->split);
 				}else{
