@@ -1,20 +1,47 @@
 cmake_minimum_required(VERSION 3.28)
 project(allocator2d)
 
+include(FetchContent)
 
-option(ENABLE_TEST "Enable test mode checks" OFF)
+set(ALLOCATOR2D_THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
 
-if(ENABLE_TEST)
-    set(CMAKE_CXX_STANDARD 23)
-else ()
-    set(CMAKE_CXX_STANDARD 20)
-endif ()
+set(CMAKE_CXX_STANDARD 23)
 
 add_executable(allocator2d main.cpp)
 
-if(ENABLE_TEST)
-    target_compile_definitions(allocator2d PRIVATE ENABLE_TEST)
+if(EXISTS "${ALLOCATOR2D_THIRD_PARTY_DIR}/googletest-1.16.0/CMakeLists.txt")
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    add_subdirectory("${ALLOCATOR2D_THIRD_PARTY_DIR}/googletest-1.16.0" EXCLUDE_FROM_ALL)
+else()
+    FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/tags/v1.16.0.zip
+    )
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
 endif()
+
+enable_testing()
+
+add_executable(allocator2d_tests tests/allocator2d_test.cpp)
+target_link_libraries(allocator2d_tests PRIVATE GTest::gtest_main)
+target_include_directories(allocator2d_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_test(NAME allocator2d_tests COMMAND allocator2d_tests)
+
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+if(EXISTS "${ALLOCATOR2D_THIRD_PARTY_DIR}/benchmark-1.9.0/CMakeLists.txt")
+    add_subdirectory("${ALLOCATOR2D_THIRD_PARTY_DIR}/benchmark-1.9.0" EXCLUDE_FROM_ALL)
+else()
+    FetchContent_Declare(
+        benchmark
+        URL https://github.com/google/benchmark/archive/refs/tags/v1.9.0.zip
+    )
+    FetchContent_MakeAvailable(benchmark)
+endif()
+
+add_executable(allocator2d_benchmark benchmarks/allocator2d_benchmark.cpp)
+target_link_libraries(allocator2d_benchmark PRIVATE benchmark::benchmark)
+target_include_directories(allocator2d_benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 include(FetchContent)
 FetchContent_Declare(
   googletest

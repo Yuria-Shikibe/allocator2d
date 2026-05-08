@@ -16,10 +16,27 @@
 #include <chrono> // [Added] Needed for timing
 #endif
 
+#ifdef ENABLE_BENCHMARK
+#include <string>
+#include <vector>
+#include <cstdint>
+#include <algorithm>
+#include <random>
+#include <print>
+#include <chrono>
+#include <array>
+#include <format>
+#endif
+
 #include "include/mo_yanxi/allocator2d.hpp"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+
+#ifdef ENABLE_BENCHMARK
+#define STB_RECT_PACK_IMPLEMENTATION
+#include "stb_rect_pack.h"
+#endif
 
 //----------------------------------------------------------------------------------------------------
 //  -TEST USAGE-    -TEST USAGE-    -TEST USAGE-    -TEST USAGE-    -TEST USAGE-    -TEST USAGE-
@@ -125,6 +142,7 @@ private:
     std::mt19937 rng_;
     std::uniform_int_distribution<std::uint32_t> size_dist_;
     std::uniform_int_distribution<int> color_dist_;
+    std::size_t error_count_{};
 
 public:
     allocator_tester(config config)
@@ -142,13 +160,19 @@ public:
         std::println("========================================");
     }
 
-    void run() {
+    bool run() {
         phase_1_fill();
         phase_2_fragment();
         phase_3_refill();
         phase_4_partial_clear();
         phase_5_full_clear_and_verify();
+        if (error_count_ == 0) {
+            std::println("  -> [PASS] No validation errors detected.");
+        } else {
+            std::println("  -> [FAIL] Validation errors: {}", error_count_);
+        }
         std::println("\nTest [{}] Completed.\n", config_.test_name);
+        return error_count_ == 0;
     }
 
 private:
@@ -254,7 +278,8 @@ private:
                 active_blocks_.push_back({*result, size, r, g, b});
                 success_count++;
                 if(alloc_.remain_area() != last_area - w * h){
-                    throw std::runtime_error{"Area Mismatch"};
+                    ++error_count_;
+                    std::println(stderr, "  -> Error: Area mismatch during refill");
                 }
                 last_area = last_area - w * h;
             }
@@ -283,7 +308,8 @@ private:
                 profiler.record(end - start, success);
 
                 if(!success){
-                    throw std::runtime_error{"Bad Dealloc"};
+                    ++error_count_;
+                    std::println(stderr, "  -> Error: Bad deallocation at {},{}", active_blocks_[i].pos.x, active_blocks_[i].pos.y);
                 }
 
                 used_area -= active_blocks_[i].size.area();
@@ -342,13 +368,15 @@ private:
             }
         } else {
             std::println("  -> [FAIL] Memory leak detection: Area mismatch, difference {}", total_area - alloc_.remain_area());
+            ++error_count_;
         }
 
         canvas_.save(get_filename("05_full_clear.png"));
     }
 };
 
-void test_fn(){
+int test_fn(){
+    int errors = 0;
     {
         allocator_tester::config config{
             .test_name = "Standard",
@@ -357,7 +385,7 @@ void test_fn(){
             .size_range = {32, 256}
         };
         allocator_tester tester(config);
-        tester.run();
+        errors += tester.run() ? 0 : 1;
     }
 
     {
@@ -368,7 +396,7 @@ void test_fn(){
             .size_range = {4, 16}
         };
         allocator_tester tester(config);
-        tester.run();
+        errors += tester.run() ? 0 : 1;
     }
     {
         allocator_tester::config config{
@@ -378,26 +406,206 @@ void test_fn(){
             .size_range = {16, 16}
         };
         allocator_tester tester(config);
-        tester.run();
+        errors += tester.run() ? 0 : 1;
     }
 
+    return errors;
+}
+
+#endif
+
+#ifdef ENABLE_BENCHMARK
+
+struct bench_case {
+    std::string name;
+    std::uint32_t atlas_size;
+    std::size_t attempts;
+    std::pair<std::uint32_t, std::uint32_t> size_range;
+    std::uint32_t seed;
+};
+
+struct bench_result {
+    std::string algo;
+    std::string name;
+    std::size_t attempted{};
+    std::size_t succeeded{};
+    std::uint64_t packed_area{};
+    std::uint64_t atlas_area{};
+    std::uint64_t elapsed_ns{};
+
+    [[nodiscard]] double util() const noexcept {
+        return atlas_area == 0 ? 0.0 : static_cast<double>(packed_area) / static_cast<double>(atlas_area);
+    }
+
+    [[nodiscard]] double ns_per_attempt() const noexcept {
+        return attempted == 0 ? 0.0 : static_cast<double>(elapsed_ns) / static_cast<double>(attempted);
+    }
+};
+
+static std::vector<mo_yanxi::math::usize2> make_workload(const bench_case& c) {
+    std::mt19937 rng(c.seed);
+    std::uniform_int_distribution<std::uint32_t> dist(c.size_range.first, c.size_range.second);
+    std::vector<mo_yanxi::math::usize2> items;
+    items.reserve(c.attempts);
+    for (std::size_t i = 0; i < c.attempts; ++i) {
+        items.push_back({dist(rng), dist(rng)});
+    }
+    std::ranges::sort(items, [](const auto& a, const auto& b) {
+        if (a.y != b.y) return a.y > b.y;
+        return a.x > b.x;
+    });
+    return items;
+}
+
+static bench_result run_allocator_static(const bench_case& c, const std::vector<mo_yanxi::math::usize2>& items) {
+    using clock = std::chrono::steady_clock;
+    mo_yanxi::allocator2d<> alloc{{c.atlas_size, c.atlas_size}};
+
+    bench_result r{.algo = "allocator2d", .name = c.name, .attempted = items.size(), .atlas_area = static_cast<std::uint64_t>(c.atlas_size) * c.atlas_size};
+    auto start = clock::now();
+    for (const auto& size : items) {
+        if (alloc.allocate(size)) {
+            ++r.succeeded;
+            r.packed_area += size.area();
+        }
+    }
+    auto end = clock::now();
+    r.elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    return r;
+}
+
+static bench_result run_stb_static(const bench_case& c, const std::vector<mo_yanxi::math::usize2>& items) {
+    using clock = std::chrono::steady_clock;
+    std::vector<stbrp_rect> rects;
+    rects.reserve(items.size());
+    for (std::size_t i = 0; i < items.size(); ++i) {
+        rects.push_back(stbrp_rect{static_cast<int>(i), static_cast<stbrp_coord>(items[i].x), static_cast<stbrp_coord>(items[i].y), 0, 0, 0});
+    }
+
+    std::vector<stbrp_node> nodes(c.atlas_size + 2);
+    stbrp_context ctx{};
+    stbrp_init_target(&ctx, static_cast<int>(c.atlas_size), static_cast<int>(c.atlas_size), nodes.data(), static_cast<int>(nodes.size()));
+    stbrp_setup_allow_out_of_mem(&ctx, 1);
+    stbrp_setup_heuristic(&ctx, STBRP_HEURISTIC_Skyline_BF_sortHeight);
+
+    bench_result r{.algo = "stb_rect_pack", .name = c.name, .attempted = items.size(), .atlas_area = static_cast<std::uint64_t>(c.atlas_size) * c.atlas_size};
+    auto start = clock::now();
+    stbrp_pack_rects(&ctx, rects.data(), static_cast<int>(rects.size()));
+    auto end = clock::now();
+
+    for (const auto& rect : rects) {
+        if (rect.was_packed) {
+            ++r.succeeded;
+            r.packed_area += static_cast<std::uint64_t>(rect.w) * static_cast<std::uint64_t>(rect.h);
+        }
+    }
+    r.elapsed_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    return r;
+}
+
+static void print_result(const bench_result& r) {
+    std::println("{:>14} | {:>12} | {:>7} / {:>7} | {:>12} / {:>12} | {:>8.2f}% | {:>10.2f} ns/op",
+        r.algo, r.name, r.succeeded, r.attempted, r.packed_area, r.atlas_area, r.util() * 100.0, r.ns_per_attempt());
+}
+
+static void run_allocator_dynamic(const bench_case& c, const std::vector<mo_yanxi::math::usize2>& items) {
+    using clock = std::chrono::steady_clock;
+    mo_yanxi::allocator2d<> alloc{{c.atlas_size, c.atlas_size}};
+
+    struct block_info {
+        mo_yanxi::math::usize2 pos{};
+        mo_yanxi::math::usize2 size{};
+    };
+
+    std::vector<block_info> active;
+    active.reserve(items.size());
+
+    std::size_t fill_success{};
+    std::uint64_t fill_area{};
+    auto start_fill = clock::now();
+    for (const auto& size : items) {
+        if (auto pos = alloc.allocate(size)) {
+            ++fill_success;
+            fill_area += size.area();
+            active.push_back({*pos, size});
+        }
+    }
+    auto end_fill = clock::now();
+
+    std::mt19937 rng(c.seed ^ 0x9E3779B9u);
+    std::ranges::shuffle(active, rng);
+
+    const std::size_t remove_count = active.size() / 2;
+    auto start_free = clock::now();
+    std::vector<block_info> remaining;
+    remaining.reserve(active.size() - remove_count);
+    for (std::size_t i = 0; i < remove_count; ++i) {
+        alloc.deallocate(active[i].pos);
+    }
+    for (std::size_t i = remove_count; i < active.size(); ++i) {
+        remaining.push_back(active[i]);
+    }
+    auto end_free = clock::now();
+    active = std::move(remaining);
+
+    std::uniform_int_distribution<std::uint32_t> small_dist(
+        std::max<std::uint32_t>(1u, c.size_range.first / 2),
+        std::min<std::uint32_t>(c.size_range.second, c.size_range.first + 5));
+
+    std::size_t refill_success{};
+    std::uint64_t refill_area{};
+    auto start_refill = clock::now();
+    for (std::size_t i = 0; i < items.size() / 2; ++i) {
+        mo_yanxi::math::usize2 size{small_dist(rng), small_dist(rng)};
+        if (auto pos = alloc.allocate(size)) {
+            ++refill_success;
+            refill_area += size.area();
+            active.push_back({*pos, size});
+        }
+    }
+    auto end_refill = clock::now();
+
+    for (const auto& b : active) {
+        alloc.deallocate(b.pos);
+    }
+
+    const auto atlas_area = static_cast<std::uint64_t>(c.atlas_size) * c.atlas_size;
+    std::println("{:>14} | {:>12} | fill {:>6} / {:>6} {:>8.2f}% {:>10.2f} ns/op | free {:>10.2f} ns/op | refill {:>7} / {:>6} {:>8.2f}% {:>10.2f} ns/op",
+        "allocator2d", c.name,
+        fill_success, items.size(), atlas_area == 0 ? 0.0 : static_cast<double>(fill_area) / atlas_area * 100.0,
+        static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(end_fill - start_fill).count()) / static_cast<double>(items.size()),
+        static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(end_free - start_free).count()) / static_cast<double>(remove_count == 0 ? 1 : remove_count),
+        refill_success, items.size() / 2,
+        atlas_area == 0 ? 0.0 : static_cast<double>(refill_area) / atlas_area * 100.0,
+        static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(end_refill - start_refill).count()) / static_cast<double>(items.size() / 2 == 0 ? 1 : items.size() / 2));
+}
+
+void benchmark_fn() {
+    const std::array<bench_case, 3> cases{{
+        {"Standard", 2048u, 10000u, {32u, 256u}, 0xC0FFEEu},
+        {"HighFragment", 1024u, 10000u, {4u, 16u}, 0xBADC0DEu},
+        {"Aligned", 1024u, 10000u, {16u, 16u}, 0x12345678u},
+    }};
+
+    std::println("Algorithm      | Case         | Packed   / Attempted | Area Packed   / Atlas Area | Utilization | Speed");
+    std::println("---------------+--------------+----------------------+----------------------------+-------------+----------------");
+
+    for (const auto& c : cases) {
+        auto items = make_workload(c);
+        print_result(run_allocator_static(c, items));
+        print_result(run_stb_static(c, items));
+        run_allocator_dynamic(c, items);
+    }
 }
 
 #endif
 
 
 int main() {
-#ifdef ENABLE_TEST
-    test_fn();
+#if defined(ENABLE_TEST)
+    return test_fn();
+#elif defined(ENABLE_BENCHMARK)
+    benchmark_fn();
 #endif
-
-    mo_yanxi::allocator2d_checked a{{256, 256}};
-    const unsigned width = 32;
-    const unsigned height = 64;
-    if(const std::optional<mo_yanxi::math::usize2> where = a.allocate({width, height})){
-        //Do something here...
-
-        a.deallocate(where.value());
-    }
-
+    return 0;
 }

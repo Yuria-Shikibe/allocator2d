@@ -7,7 +7,7 @@
 *   **Interface**: Simple `allocate(size)` and `deallocate(position)` API.
 *   **Integration**: Easy to integrate (single header/module).
 *   **Dependencies**: Minimal (Standard Library).
-*   **Design**: Uses a "Quad Split" strategy. When a block is allocated, the remaining space in the node is split into up to 4 new free rectangles (Top-Left, Top-Right, Bottom-Left, Bottom-Right relative to the allocated block).
+*   **Design**: Uses a 2-way split strategy. When a block is allocated, the remaining space in the node is split into up to 2 new free rectangles (Top and Right relative to the allocated block).
 *   **Deallocation**: Supports coalescing. When a block is freed, it attempts to merge with its "siblings" in the quad-split tree to reform larger free blocks.
 
 ## 3. Performance Analysis
@@ -21,7 +21,7 @@ Based on the provided benchmarks and local testing:
 
 ## 4. Code Quality
 *   **Modern C++**: Uses C++20 features appropriately.
-*   **Readability**: The code is structured but the "Quad Split" logic with `split_point` and recursive merging is complex.
+*   **Readability**: The code is structured but the split/merge logic with `split_point` and recursive merging is still non-trivial.
 *   **Safety**: Includes a checked version (`allocator2d_checked`) for leak detection, which is very useful for debugging.
 *   **Robustness**: Not thread-safe (as stated), which is standard for such allocators.
 
@@ -32,7 +32,7 @@ Based on the provided benchmarks and local testing:
 | **Primary Goal** | Dynamic Alloc/Dealloc | Tightest Packing (Offline) | Simple/Fast Packing | Fast Alloc/Dealloc |
 | **Deallocation** | **Yes** (Coalescing) | Difficult/Slow | Partial/Difficult | **Yes** (Fast Coalescing) |
 | **Packing Efficiency** | Good (Variable size) | **Best** | Moderate | Poor (Powers of 2 usually) |
-| **Algorithm** | Quad Split (Dynamic) | MaxRects Heuristic | Split to 2 | Fixed Grid / Quadtree |
+| **Algorithm** | 2-Split (Dynamic) | MaxRects Heuristic | Split to 2 | Fixed Grid / Quadtree |
 | **Complexity** | High (Merge logic) | High (Fragment analysis) | Low | Low (Bitwise logic) |
 
 ### Detailed Comparison:
@@ -43,7 +43,7 @@ Based on the provided benchmarks and local testing:
 
 2.  **Vs. Guillotine**:
     *   **Guillotine** is similar but splits free space into 2 rectangles instead of 4.
-    *   **mo_yanxi** splits into 4. The author notes this might be suboptimal compared to splitting into 2. Splitting into 4 creates more nodes (fragmentation tracking overhead) but might offer more "shape" options for future fits.
+    *   **mo_yanxi** splits into 2. This keeps the tree smaller and reduces bookkeeping overhead while still supporting arbitrary rectangle sizes.
     *   **Conclusion**: Guillotine might be slightly lighter weight, but `mo_yanxi` provides a complete implementation with deallocation support out-of-the-box.
 
 3.  **Vs. Buddy Allocator**:
@@ -57,4 +57,4 @@ The `mo_yanxi::allocator2d` library is a solid choice for **dynamic 2D packing**
 *   UI Texture Atlases (where widgets appear/disappear).
 *   Streaming Tile Systems.
 
-Its main trade-off is the overhead of the Quad Split structure, which can be slower during heavy deallocation/merging scenarios compared to simpler schemes, but it offers good packing density for arbitrary sizes.
+Its main trade-off is the overhead of the dynamic split tree, which can be slower during heavy deallocation/merging scenarios compared to simpler schemes, but it offers good packing density for arbitrary sizes.
