@@ -1,1 +1,7 @@
 build/
+build-*/
+cmake-build-*/
+_ReSharper.Caches/
+.idea/
+examples/output/
+profile/benchmark/data/

@@ -1,13 +1,27 @@
 cmake_minimum_required(VERSION 3.28)
-project(allocator2d)
+project(allocator2d LANGUAGES CXX)
 
 include(FetchContent)
 
-set(ALLOCATOR2D_THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
+option(ENABLE_TEST "Build allocator2d executable in visual test mode" OFF)
+option(ENABLE_BENCHMARK "Build allocator2d executable in benchmark mode" OFF)
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(allocator2d main.cpp)
+set(ALLOCATOR2D_THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
+
+add_executable(allocator2d examples/run_sample.cpp)
+target_include_directories(allocator2d PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+if(ENABLE_TEST)
+    target_compile_definitions(allocator2d PRIVATE ENABLE_TEST)
+endif()
+
+if(ENABLE_BENCHMARK)
+    target_compile_definitions(allocator2d PRIVATE ENABLE_BENCHMARK)
+endif()
 
 if(EXISTS "${ALLOCATOR2D_THIRD_PARTY_DIR}/googletest-1.16.0/CMakeLists.txt")
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -23,10 +37,18 @@ endif()
 
 enable_testing()
 
-add_executable(allocator2d_tests tests/allocator2d_test.cpp)
+add_executable(allocator2d_tests
+    tests/allocator2d_test.cpp
+    tests/test_allocator.cpp
+)
 target_link_libraries(allocator2d_tests PRIVATE GTest::gtest_main)
-target_include_directories(allocator2d_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-add_test(NAME allocator2d_tests COMMAND allocator2d_tests)
+target_include_directories(allocator2d_tests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+include(GoogleTest)
+gtest_discover_tests(allocator2d_tests)
 
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
 if(EXISTS "${ALLOCATOR2D_THIRD_PARTY_DIR}/benchmark-1.9.0/CMakeLists.txt")
@@ -42,21 +64,3 @@ endif()
 add_executable(allocator2d_benchmark benchmarks/allocator2d_benchmark.cpp)
 target_link_libraries(allocator2d_benchmark PRIVATE benchmark::benchmark)
 target_include_directories(allocator2d_benchmark PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-enable_testing()
-
-add_executable(allocator_tests tests/test_allocator.cpp)
-target_link_libraries(allocator_tests PRIVATE GTest::gtest_main)
-target_include_directories(allocator_tests PRIVATE include)
-target_compile_features(allocator_tests PRIVATE cxx_std_20)
-
-include(GoogleTest)
-gtest_discover_tests(allocator_tests)
