@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 642" width="1440" height="642" role="img" aria-label="Dynamic Reuse Benchmark">
+<rect x="0.0" y="0.0" width="1440.0" height="642.0" rx="0.0" fill="#ffffff"/>
+<text x="24.0" y="18.0" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="800" fill="#111827" text-anchor="start">Dynamic Reuse Benchmark</text>
+<text x="24.0" y="36.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="400" fill="#6b7280" text-anchor="start">Source: profile/benchmark/CROSS_LIBRARY_RESULTS.md</text>
+<rect x="24.0" y="24.0" width="1392.0" height="26.0" rx="10.0" fill="#111827"/>
+<text x="720.0" y="42.0" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">Standard</text>
+<rect x="24.0" y="60.0" width="690.0" height="142.0" rx="14.0" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/>
+<text x="40.0" y="84.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#111827" text-anchor="start">Reuse speed (ns/op)</text>
+<text x="40.0" y="100.0" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Longer bars indicate better results</text>
+<rect x="38.0" y="120.0" width="10.0" height="10.0" rx="3.0" fill="#f28e2b"/>
+<text x="54.0" y="131.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">allocator2d</text>
+<text x="54.0" y="145.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="54.0" dy="0">fill → refill: 107 → 2543</tspan></text>
+<rect x="264.0" y="122.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="264.0" y="122.0" width="300.0" height="16.0" rx="8.0" fill="#f28e2b"/>
+<text x="576.0" y="135.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">2400.957 ns</text>
+<rect x="32.0" y="152.0" width="674.0" height="38.0" rx="8.0" fill="#eef2ff"/>
+<rect x="38.0" y="162.0" width="10.0" height="10.0" rx="3.0" fill="#4e79a7"/>
+<text x="54.0" y="173.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">RectangleBinPack-Guillotine-BAF</text>
+<text x="54.0" y="187.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="54.0" dy="0">fill → refill: 104 → 2524</tspan></text>
+<rect x="264.0" y="164.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="264.0" y="164.0" width="4.0" height="16.0" rx="8.0" fill="#4e79a7"/>
+<text x="576.0" y="177.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">690544.997 ns</text>
+<rect x="732.0" y="60.0" width="690.0" height="142.0" rx="14.0" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/>
+<text x="748.0" y="84.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#111827" text-anchor="start">Final utilization (%)</text>
+<text x="748.0" y="100.0" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Longer bars indicate better results</text>
+<rect x="746.0" y="120.0" width="10.0" height="10.0" rx="3.0" fill="#f28e2b"/>
+<text x="762.0" y="131.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">allocator2d</text>
+<text x="762.0" y="145.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="762.0" dy="0">fill → refill: 107 → 2543</tspan><tspan x="762.0" dy="13">util: 96.50 / 47.91 / 42.58 / 90.48%</tspan></text>
+<rect x="972.0" y="122.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="972.0" y="122.0" width="271.5" height="16.0" rx="8.0" fill="#f28e2b"/>
+<text x="1284.0" y="135.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">90.48%</text>
+<rect x="740.0" y="152.0" width="674.0" height="38.0" rx="8.0" fill="#eef2ff"/>
+<rect x="746.0" y="162.0" width="10.0" height="10.0" rx="3.0" fill="#4e79a7"/>
+<text x="762.0" y="173.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">RectangleBinPack-Guillotine-BAF</text>
+<text x="762.0" y="187.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="762.0" dy="0">fill → refill: 104 → 2524</tspan><tspan x="762.0" dy="13">util: 97.15 / 48.53 / 42.35 / 90.88%</tspan></text>
+<rect x="972.0" y="164.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="972.0" y="164.0" width="272.6" height="16.0" rx="8.0" fill="#4e79a7"/>
+<text x="1284.0" y="177.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">90.88%</text>
+<rect x="24.0" y="220.0" width="1392.0" height="26.0" rx="10.0" fill="#111827"/>
+<text x="720.0" y="238.0" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">HighFragment</text>
+<rect x="24.0" y="256.0" width="690.0" height="142.0" rx="14.0" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/>
+<text x="40.0" y="280.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#111827" text-anchor="start">Reuse speed (ns/op)</text>
+<text x="40.0" y="296.0" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Longer bars indicate better results</text>
+<rect x="38.0" y="316.0" width="10.0" height="10.0" rx="3.0" fill="#f28e2b"/>
+<text x="54.0" y="327.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">allocator2d</text>
+<text x="54.0" y="341.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="54.0" dy="0">fill → refill: 10000 → 5000</tspan></text>
+<rect x="264.0" y="318.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="264.0" y="318.0" width="300.0" height="16.0" rx="8.0" fill="#f28e2b"/>
+<text x="576.0" y="331.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">6674.962 ns</text>
+<rect x="32.0" y="348.0" width="674.0" height="38.0" rx="8.0" fill="#eef2ff"/>
+<rect x="38.0" y="358.0" width="10.0" height="10.0" rx="3.0" fill="#4e79a7"/>
+<text x="54.0" y="369.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">RectangleBinPack-Guillotine-BAF</text>
+<text x="54.0" y="383.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="54.0" dy="0">fill → refill: 10000 → 5000</tspan></text>
+<rect x="264.0" y="360.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="264.0" y="360.0" width="4.0" height="16.0" rx="8.0" fill="#4e79a7"/>
+<text x="576.0" y="373.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">8293321.483 ns</text>
+<rect x="732.0" y="256.0" width="690.0" height="142.0" rx="14.0" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/>
+<text x="748.0" y="280.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#111827" text-anchor="start">Final utilization (%)</text>
+<text x="748.0" y="296.0" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Longer bars indicate better results</text>
+<rect x="746.0" y="316.0" width="10.0" height="10.0" rx="3.0" fill="#f28e2b"/>
+<text x="762.0" y="327.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">allocator2d</text>
+<text x="762.0" y="341.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="762.0" dy="0">fill → refill: 10000 → 5000</tspan><tspan x="762.0" dy="13">util: 94.73 / 47.30 / 14.40 / 61.69%</tspan></text>
+<rect x="972.0" y="318.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="972.0" y="318.0" width="185.1" height="16.0" rx="8.0" fill="#f28e2b"/>
+<text x="1284.0" y="331.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">61.69%</text>
+<rect x="740.0" y="348.0" width="674.0" height="38.0" rx="8.0" fill="#eef2ff"/>
+<rect x="746.0" y="358.0" width="10.0" height="10.0" rx="3.0" fill="#4e79a7"/>
+<text x="762.0" y="369.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">RectangleBinPack-Guillotine-BAF</text>
+<text x="762.0" y="383.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="762.0" dy="0">fill → refill: 10000 → 5000</tspan><tspan x="762.0" dy="13">util: 94.73 / 47.30 / 14.40 / 61.69%</tspan></text>
+<rect x="972.0" y="360.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="972.0" y="360.0" width="185.1" height="16.0" rx="8.0" fill="#4e79a7"/>
+<text x="1284.0" y="373.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">61.69%</text>
+<rect x="24.0" y="416.0" width="1392.0" height="26.0" rx="10.0" fill="#111827"/>
+<text x="720.0" y="434.0" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">Aligned</text>
+<rect x="24.0" y="452.0" width="690.0" height="142.0" rx="14.0" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/>
+<text x="40.0" y="476.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#111827" text-anchor="start">Reuse speed (ns/op)</text>
+<text x="40.0" y="492.0" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Longer bars indicate better results</text>
+<rect x="38.0" y="512.0" width="10.0" height="10.0" rx="3.0" fill="#f28e2b"/>
+<text x="54.0" y="523.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">allocator2d</text>
+<text x="54.0" y="537.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="54.0" dy="0">fill → refill: 4096 → 2339</tspan></text>
+<rect x="264.0" y="514.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="264.0" y="514.0" width="300.0" height="16.0" rx="8.0" fill="#f28e2b"/>
+<text x="576.0" y="527.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">10540.576 ns</text>
+<rect x="32.0" y="544.0" width="674.0" height="38.0" rx="8.0" fill="#eef2ff"/>
+<rect x="38.0" y="554.0" width="10.0" height="10.0" rx="3.0" fill="#4e79a7"/>
+<text x="54.0" y="565.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">RectangleBinPack-Guillotine-BAF</text>
+<text x="54.0" y="579.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="54.0" dy="0">fill → refill: 4096 → 2683</tspan></text>
+<rect x="264.0" y="556.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="264.0" y="556.0" width="4.0" height="16.0" rx="8.0" fill="#4e79a7"/>
+<text x="576.0" y="569.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">5044235.700 ns</text>
+<rect x="732.0" y="452.0" width="690.0" height="142.0" rx="14.0" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/>
+<text x="748.0" y="476.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#111827" text-anchor="start">Final utilization (%)</text>
+<text x="748.0" y="492.0" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Longer bars indicate better results</text>
+<rect x="746.0" y="512.0" width="10.0" height="10.0" rx="3.0" fill="#f28e2b"/>
+<text x="762.0" y="523.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">allocator2d</text>
+<text x="762.0" y="537.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="762.0" dy="0">fill → refill: 4096 → 2339</tspan><tspan x="762.0" dy="13">util: 100.00 / 50.00 / 32.00 / 82.00%</tspan></text>
+<rect x="972.0" y="514.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="972.0" y="514.0" width="246.0" height="16.0" rx="8.0" fill="#f28e2b"/>
+<text x="1284.0" y="527.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">82.00%</text>
+<rect x="740.0" y="544.0" width="674.0" height="38.0" rx="8.0" fill="#eef2ff"/>
+<rect x="746.0" y="554.0" width="10.0" height="10.0" rx="3.0" fill="#4e79a7"/>
+<text x="762.0" y="565.0" font-family="Segoe UI, Arial, sans-serif" font-size="13" font-weight="600" fill="#111827" text-anchor="start">RectangleBinPack-Guillotine-BAF</text>
+<text x="762.0" y="579.0" font-family="Segoe UI, Arial, sans-serif" font-size="10" fill="#64748b"><tspan x="762.0" dy="0">fill → refill: 4096 → 2683</tspan><tspan x="762.0" dy="13">util: 100.00 / 50.00 / 36.71 / 86.71%</tspan></text>
+<rect x="972.0" y="556.0" width="300.0" height="16.0" rx="8.0" fill="#e5e7eb"/>
+<rect x="972.0" y="556.0" width="260.1" height="16.0" rx="8.0" fill="#4e79a7"/>
+<text x="1284.0" y="569.0" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="600" fill="#374151" text-anchor="start">86.71%</text>
+<text x="24.0" y="622.0" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-weight="400" fill="#6b7280" text-anchor="start">Longer bars mean better results within each case.</text>
+</svg>

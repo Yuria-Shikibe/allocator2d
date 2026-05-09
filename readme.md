@@ -63,7 +63,7 @@ cmake --build build-visual --target allocator2d --config Debug
 build-visual\Debug\allocator2d.exe
 ```
 
-<table>
+<table width="100%" cellpadding="6" cellspacing="0">
     <thead>
         <tr>
             <th align="center">Test Case</th>
@@ -75,39 +75,21 @@ build-visual\Debug\allocator2d.exe
     <tbody>
         <tr>
             <td align="center"><strong>Standard</strong></td>
-            <td align="center">
-                <img src="readme_assets/Standard_01_allocated.png" width="100%" alt="Standard Initial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/Standard_02_fragmented.png" width="100%" alt="Standard Partial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/Standard_03_refilled.png" width="100%" alt="Standard Refilled"/>
-            </td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/Standard_01_allocated.png" alt="Standard Initial" width="360" height="240" /></td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/Standard_02_fragmented.png" alt="Standard Partial" width="360" height="240" /></td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/Standard_03_refilled.png" alt="Standard Refilled" width="360" height="240" /></td>
         </tr>
         <tr>
             <td align="center"><strong>HighFragment</strong></td>
-            <td align="center">
-                <img src="readme_assets/HighFragment_01_allocated.png" width="100%" alt="HighFragment Initial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/HighFragment_02_fragmented.png" width="100%" alt="HighFragment Partial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/HighFragment_03_refilled.png" width="100%" alt="HighFragment Refilled"/>
-            </td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/HighFragment_01_allocated.png" alt="HighFragment Initial" width="360" height="240" /></td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/HighFragment_02_fragmented.png" alt="HighFragment Partial" width="360" height="240" /></td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/HighFragment_03_refilled.png" alt="HighFragment Refilled" width="360" height="240" /></td>
         </tr>
         <tr>
             <td align="center"><strong>Aligned</strong></td>
-            <td align="center">
-                <img src="readme_assets/Aligned_01_allocated.png" width="100%" alt="Aligned Initial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/Aligned_02_fragmented.png" width="100%" alt="Aligned Partial"/>
-            </td>
-            <td align="center">
-                <img src="readme_assets/Aligned_03_refilled.png" width="100%" alt="Aligned Refilled"/>
-            </td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/Aligned_01_allocated.png" alt="Aligned Initial" width="360" height="240" /></td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/Aligned_02_fragmented.png" alt="Aligned Partial" width="360" height="240" /></td>
+            <td align="center" valign="top" width="33%"><img src="readme_assets/Aligned_03_refilled.png" alt="Aligned Refilled" width="360" height="240" /></td>
         </tr>
     </tbody>
 </table>
